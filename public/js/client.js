@@ -18,12 +18,10 @@ TrelloPowerUp.initialize({
       text: 'Exporter',
       condition: 'always',
       callback: function(t){
-          return t.boardBar({
-            url: './board-bar.html',
-            height: 200
-          })
-          .then(function(){
-            return t.closePopup();
+          return t.popup({
+            title: 'Exporter le tableau au format Excel',
+            url: './popup.html',
+            height: 330
           });
         }
     }];

@@ -14,17 +14,19 @@ window.addEventListener('unload', function(e) {
 // -- Action on export button
 
 const button = document.getElementById('exportButton');
-button.addEventListener('click', function(event){
-    
+const cardsToExcludeFieldTarget = "Ne pas exporter";
+
+button.addEventListener('click', function(event) {
+  
   // Parse data  
   return Promise.all([t.board("all"), t.lists("all")]).then(function(result) {
     
     var board = result[0];
     var lists = result[1];
-    var customFieldsRef = board.customFields;
-    var customFieldsNameRef = new Array();
-    var customFieldsNamePrefix = "CF | ";
-    var cardsToExcludeFieldTarget = "Ne pas exporter";
+    
+    var customFieldsRef         = board.customFields;
+    var customFieldsNameRef     = new Array();
+    var customFieldsNamePrefix  = "CF | ";
     
     var num = 0;
     var trello_data = new Array();
@@ -57,7 +59,7 @@ button.addEventListener('click', function(event){
           var cardCField = card.customFieldItems.find(f => f.idCustomField === refCField.id);
           var cardCFieldValue = "";
           
-          // custome field value
+          // custom field value
           if(cardCField && cardCField.hasOwnProperty("idValue")) {
             // type combo value
             var option = refCField.options.find(o => o.id === cardCField.idValue);
@@ -166,18 +168,36 @@ button.addEventListener('click', function(event){
 
 
 t.render(function(){
-
-  // this function we be called once on initial load
-  // and then called each time something changes that
-  // you might want to react to, such as new data being
-  // stored with t.set()
   
-  t.lists("all").then(function (lists) {
+  return Promise.all([t.board("all"), t.lists("all"), t.cards("all")]).then(function(result) {
+    
+    var board = result[0];
+    var lists = result[1];
+    var cards = result[2];
+    
     document.getElementById('nbLists').textContent = lists.length;
-  });
-
-  t.cards("all").then(function (cards) {
     document.getElementById('nbCards').textContent = cards.length;
+    
+    var nbCardsToExclude = 0;
+    var customFieldsRef  = board.customFields;
+    
+    cards.forEach((card) => {
+               
+        // Card Custom Fields
+        let cFields = new Array();
+        customFieldsRef.forEach((refCField) => {
+          
+          var cardCField = card.customFieldItems.find(f => f.idCustomField === refCField.id);
+          if( cardCField && refCField.name == cardsToExcludeFieldTarget && cardCField.value.checked ) {
+            nbCardsToExclude++;
+          }
+          
+        });
+ 
+    });
+    
+    document.getElementById('nbCardsToExclude').textContent = nbCardsToExclude;
+    
   });
 
 });

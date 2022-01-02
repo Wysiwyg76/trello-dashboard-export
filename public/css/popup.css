@@ -1,0 +1,39 @@
+body {
+  background: white;
+  color: #0C3953;
+  padding: 10px;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+p.helper {
+  font-size: 0.8em;
+  color: grey;
+  text-align: justify;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+ul {
+  margin-top: 20px;
+}
+
+ul li {
+  text-align: center;
+}
+
+button#exportButton {
+  text-align: center;
+  display: block;
+  margin: 20px auto 35px;
+}
